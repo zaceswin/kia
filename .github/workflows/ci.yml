@@ -1,0 +1,38 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  security-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Python Linters & Security Scanners
+        run: |
+          python -m pip install --upgrade pip
+          pip install ruff bandit
+
+      - name: Lint Python Code (Ruff)
+        run: ruff check .
+
+      - name: Security Scan Python Code (Bandit)
+        run: bandit -r . -ll -ii -x tests/
+
+      - name: Compile C Code
+        run: |
+          # Assuming the C file is moved to a src/ directory
+          gcc failed_pentest_simulation.c -o pentest_sim
+          # Verify the binary was created
+          test -x pentest_sim
