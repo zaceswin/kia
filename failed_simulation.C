@@ -1,37 +1,44 @@
-// failed_pentest_simulation.c
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include <string.h>
-#include <time.h>
 
 #define MAX_ATTEMPTS 5
 
-int main() {
-    char username[50];
-    char password[50];
-    const char VALID_USERNAME[] = "admin";
-    const char VALID_PASSWORD[] = "SecurePass123";
+// Simulate an IP tracking dictionary
+int get_failed_attempts(const char *ip) {
+    // In a real scenario, this would query an SQLite DB or Hash Map.
+    // For simulation, we return a mock incrementing value.
+    static int attempts = 0;
+    return ++attempts;
+}
 
-    printf("=== Simulating Failed Pentest in C ===\n");
-
-    for (int i = 0; i < MAX_ATTEMPTS; i++) {
-        printf("\nAttempt %d\n", i+1);
-        printf("Enter username: ");
-        scanf("%49s", username);
-        printf("Enter password: ");
-        scanf("%49s", password);
-
-        if (strcmp(username, VALID_USERNAME) == 0 && strcmp(password, VALID_PASSWORD) == 0) {
-            printf("Access Granted ✅\n");
-            break;
-        } else {
-            printf("Access Denied ❌\n");
-
-            // Log failed attempt
-            time_t now = time(NULL);
-            printf("Log: FAILED LOGIN at %s", ctime(&now));
-        }
+void simulate_login_attempt(const char *ip, const char *username) {
+    printf("[*] Incoming SSH connection from %s for user %s...\n", ip, username);
+    
+    int attempts = get_failed_attempts(ip);
+    
+    if (attempts > MAX_ATTEMPTS) {
+        printf("[!] IP %s exceeded threshold. Dropping connection.\n", ip);
+        return;
     }
 
-    printf("\nPentest simulation complete.\n");
+    // Tarpitting: Delay response based on number of failed attempts
+    int delay_seconds = attempts * 2; 
+    
+    printf("[-] Authentication failed. Tarpitting response for %d seconds...\n", delay_seconds);
+    sleep(delay_seconds); // Suspends execution, exhausting attacker threads
+    
+    printf("[+] Connection closed for %s.\n\n", ip);
+}
+
+int main() {
+    printf("Starting C-Level Tarpit Simulation...\n\n");
+    
+    // Simulating rapid brute force from the same IP
+    for (int i = 0; i < 6; i++) {
+        simulate_login_attempt("192.168.1.105", "admin");
+    }
+    
     return 0;
 }
