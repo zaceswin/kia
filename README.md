@@ -1,113 +1,41 @@
-# kia
-failed server access 
-# 🔐 Failed Pentest Simulation
+# 🔐 kia - SOC Honeypot & Failed Pentest Simulation
 
-## 📌 Overview
+📌 **Overview**
+This repository demonstrates a safe simulation of a failed penetration test and an active defensive honeypot from a Security Operations Center (SOC) perspective. 
 
-This repository demonstrates a **safe simulation of a failed penetration test** from a server's perspective.
+Instead of performing real attacks, this architecture shows how a system:
+- Handles and tarpits unauthorized login attempts to exhaust attacker resources.
+- Logs suspicious activity using structured JSON (SIEM-ready).
+- Enriches IP logs with real-world threat intelligence via AbuseIPDB.
+- Generates automated firewall (`iptables`) remediation scripts.
 
-Instead of performing real attacks, the scripts show how a system:
+This project is designed for educational purposes only, focusing on blue team defensive engineering.
 
-* Handles unauthorized login attempts
-* Logs suspicious activity
-* Denies access to invalid credentials
+🎯 **Objectives**
+- Simulate brute-force login attempts against mock SSH/HTTP endpoints.
+- Demonstrate exponential backoff (tarpitting) in C to slow down attackers.
+- Visualize attacks via a FastAPI & Tailwind CSS secure dashboard.
+- Generate automated active-defense responses using Python.
 
-This project is designed for **educational purposes only**, focusing on **defensive security practices (blue team perspective)**.
+🛠️ **Technologies Used**
+- **Python (FastAPI)** – Dashboard backend and automated iptables script generation.
+- **C** – Low-level tarpit implementation for connection delaying.
+- **Docker & Docker Compose** – Containerized microservices architecture.
+- **Tailwind CSS & Jinja2** – Frontend SOC dashboard rendering.
+- **AbuseIPDB API** – Threat intelligence enrichment.
+- **GitHub Actions** – CI/CD pipeline for code security and compilation.
 
----
-
-## 🎯 Objectives
-
-* Simulate multiple failed login attempts
-* Demonstrate basic logging mechanisms
-* Show how servers respond to unauthorized access
-* Provide beginner-friendly cybersecurity examples
-
----
-
-## 🛠️ Technologies Used
-
-* **Python** – for readable and structured simulation
-* **C** – for low-level system-style implementation
-* **Bash** – for scripting and automation
-
----
-
-## 📂 Project Structure
-
-```
-failed-pentest-simulation/
-│── failed_pentest_simulation.py
-│── failed_pentest_simulation.c
-│── failed_pentest_simulation.sh
-│── server_logs.txt
-│── README.md
-```
-
----
-
-## ▶️ How to Run
-
-### 🐍 Python
-
-```bash
-python3 failed_pentest_simulation.py
-```
-
-### ⚙️ C
-
-```bash
-gcc failed_pentest_simulation.c -o pentest_sim
-./pentest_sim
-```
-
-### 🖥️ Bash
-
-```bash
-chmod +x failed_pentest_simulation.sh
-./failed_pentest_simulation.sh
-```
-
----
-
-## 📊 What the Simulation Shows
-
-* Repeated login attempts using weak/common credentials
-* Server rejecting invalid authentication
-* Logging of failed access attempts with timestamps
-* No successful breach (pentest fails)
-
----
-
-## ⚠️ Disclaimer
-
-This project **does NOT perform real hacking or exploitation**.
-It is strictly for:
-
-* Learning purposes
-* Demonstrating security concepts
-* Showcasing defensive programming
-
-Do not use these concepts for unauthorized access to systems.
-
----
-
-## 🚀 Future Improvements
-
-* Add account lockout after multiple failed attempts
-* Simulate IP tracking and blocking
-* Create a log analyzer dashboard
-* Expand to web-based authentication simulation
-
----
-
-## 👨‍💻 Author
-zaceswin/   
-Created as part of a cybersecurity learning journey/project
-
-
----
-
-## ⭐ Contribute
-
-Feel free to fork this repository, improve the simulation, and submit a pull request!
+📂 **Project Structure**
+```text
+kia/
+│── src/
+│   ├── failed_pentest_simulation.c   # C-level Tarpit simulator
+│   ├── failed_pentest_simulation.py  # Python brute-force simulator
+│   ├── generate_firewall_rules.py    # iptables automation script
+│   └── dashboard.py                  # FastAPI Dashboard
+│── templates/
+│   └── index.html                    # Tailwind CSS UI
+│── logs/                             # Docker-mounted log directory
+│── docker-compose.yml
+│── Dockerfile
+└── README.md
