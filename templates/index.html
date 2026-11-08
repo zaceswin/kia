@@ -29,17 +29,18 @@
                 </thead>
                 <tbody class="divide-y divide-slate-700">
                     {% for log in logs %}
+                    {% set score = log.threat_score|default('Cached/Skipped') %}
                     <tr class="hover:bg-slate-750 transition-colors">
                         <td class="p-4 text-slate-400">{{ log.timestamp[:19] }}</td>
                         <td class="p-4 font-bold text-red-400">{{ log.source_ip }}</td>
-                        <td class="p-4 text-slate-300">{{ log.country }}</td>
+                        <td class="p-4 text-slate-300">{{ log.country|default('Unknown') }}</td>
                         <td class="p-4 font-bold 
-                            {% if log.threat_score != 'Cached/Skipped' %}
-                                {% if log.threat_score|int > 80 %} text-red-500 
-                                {% elif log.threat_score|int > 40 %} text-yellow-500 
+                            {% if score != 'Cached/Skipped' %}
+                                {% if score|int > 80 %} text-red-500 
+                                {% elif score|int > 40 %} text-yellow-500 
                                 {% else %} text-green-500 {% endif %}
                             {% else %} text-slate-500 {% endif %}">
-                            {{ log.threat_score }}{% if log.threat_score != 'Cached/Skipped' %}%{% endif %}
+                            {{ score }}{% if score != 'Cached/Skipped' %}%{% endif %}
                         </td>
                         <td class="p-4">{{ log.username }}</td>
                         <td class="p-4"><span class="px-2 py-1 bg-red-900/50 text-red-500 rounded border border-red-800/50">{{ log.status }}</span></td>

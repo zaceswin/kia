@@ -33,8 +33,7 @@ def generate_iptables_script():
     with open(OUTPUT_SCRIPT, "w", encoding="utf-8") as file:
         file.write("#!/bin/bash\n")
         file.write("# Auto-generated iptables blocking script\n\n")
-        for ip in malicious_ips:
-            file.write(f"iptables -A INPUT -s {ip} -j DROP\n")
+        file.writelines(f"iptables -A INPUT -s {ip} -j DROP\n" for ip in malicious_ips)
 
     print(f"[+] Generated {OUTPUT_SCRIPT} with {len(malicious_ips)} IP blocks.")
     print(f"[*] Run 'sudo bash {OUTPUT_SCRIPT}' to apply rules.")

@@ -50,12 +50,12 @@ async def get_dashboard(request: Request, _api_key: str = Depends(verify_api_key
 
     # Calculate basic metrics
     total_attempts = len(logs)
-    unique_ips = len(set(log.get("source_ip") for log in logs))
+    unique_ips = len({log.get("source_ip") for log in logs})
 
     return templates.TemplateResponse(
+        request,
         "index.html",
         {
-            "request": request,
             "logs": logs,
             "total_attempts": total_attempts,
             "unique_ips": unique_ips,

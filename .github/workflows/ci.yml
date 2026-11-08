@@ -8,7 +8,7 @@ on:
 
 jobs:
   security-and-build:
-    runs-on: ubuntu-24.04  # Pinned to 24.04 LTS to fix Ubuntu 26 and Node.js deprecation warnings
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -19,10 +19,10 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
 
-      - name: Install Python Linters & Security Scanners
+      - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install ruff bandit
+          pip install -r requirements.txt ruff bandit pytest
 
       - name: Lint Python Code (Ruff)
         run: ruff check .
@@ -30,9 +30,13 @@ jobs:
       - name: Security Scan Python Code (Bandit)
         run: bandit -r . -ll -ii -x tests/
 
+      - name: Run Tests
+        env:
+          ADMIN_API_KEY: ci-test-key
+        run: python -m pytest -q
+
       - name: Compile C Code
         run: |
-          # Compiling from the src/ directory based on your new structure
           gcc src/failed_pentest_simulation.c -o pentest_sim
           # Verify the binary was created
           test -x pentest_sim

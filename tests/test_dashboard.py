@@ -1,7 +1,8 @@
-import pytest
 import json
+
 from fastapi.testclient import TestClient
-from src.dashboard import app, API_KEY
+
+from src.dashboard import API_KEY, app
 
 # Initialize the FastAPI test client
 client = TestClient(app)
@@ -32,8 +33,8 @@ def test_dashboard_authorized_empty_logs(monkeypatch, tmp_path):
     assert response.status_code == 200
     assert "text/html" in response.headers["content-type"]
     assert "Failed Access Attempt Monitor" in response.text
-    # Verify the zero-metrics are rendered
-    assert "0</p>" in response.text 
+    # No log rows should be rendered for an empty log file
+    assert "<td" not in response.text
 
 def test_dashboard_authorized_with_logs(monkeypatch, tmp_path):
     """Test that the dashboard parses and renders JSON logs correctly."""
