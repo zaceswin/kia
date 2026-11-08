@@ -29,3 +29,7 @@ clean:
 	rm -f logs/server_logs.json
 	rm -f block_attackers.sh
 	@echo "[+] Environment cleaned."
+run-all: build up compile-c
+	./pentest_sim
+	python3 src/generate_firewall_rules.py
+	@echo "[+] Entire honeypot suite executed successfully."
