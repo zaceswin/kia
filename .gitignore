@@ -1,0 +1,31 @@
+# Environment Variables (Security Risk)
+.env
+.env.*
+
+# Logs and Simulation Output
+logs/
+*.log
+*.json
+server_logs.json
+server_logs.txt
+
+# Generated Scripts
+block_attackers.sh
+
+# Compiled C Binaries
+pentest_sim
+*.o
+*.out
+
+# Python Cache & Virtual Environments
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.venv/
+
+# OS and IDE Files
+.DS_Store
+.vscode/
+.idea/
