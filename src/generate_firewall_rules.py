@@ -4,7 +4,8 @@ from pathlib import Path
 
 LOG_FILE = Path("logs/server_logs.json")
 OUTPUT_SCRIPT = Path("block_attackers.sh")
-THRESHOLD = 3 # Block IPs with more than 3 failed attempts
+THRESHOLD = 3  # Block IPs with more than 3 failed attempts
+
 
 def generate_iptables_script():
     if not LOG_FILE.exists():
@@ -12,9 +13,9 @@ def generate_iptables_script():
         return
 
     ip_counts = Counter()
-    
-    with open(LOG_FILE, "r") as f:
-        for line in f:
+
+    with open(LOG_FILE, "r", encoding="utf-8") as file:
+        for line in file:
             if line.strip():
                 try:
                     data = json.loads(line)
@@ -29,14 +30,15 @@ def generate_iptables_script():
         print("[+] No IPs exceeded the blocking threshold.")
         return
 
-    with open(OUTPUT_SCRIPT, "w") as f:
-        f.write("#!/bin/bash\n")
-        f.write("# Auto-generated iptables blocking script\n\n")
+    with open(OUTPUT_SCRIPT, "w", encoding="utf-8") as file:
+        file.write("#!/bin/bash\n")
+        file.write("# Auto-generated iptables blocking script\n\n")
         for ip in malicious_ips:
-            f.write(f"iptables -A INPUT -s {ip} -j DROP\n")
-            
+            file.write(f"iptables -A INPUT -s {ip} -j DROP\n")
+
     print(f"[+] Generated {OUTPUT_SCRIPT} with {len(malicious_ips)} IP blocks.")
     print(f"[*] Run 'sudo bash {OUTPUT_SCRIPT}' to apply rules.")
+
 
 if __name__ == "__main__":
     generate_iptables_script()
